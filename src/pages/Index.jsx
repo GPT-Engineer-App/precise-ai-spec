@@ -49,7 +49,7 @@ const Index = () => {
   };
 
   return (
-    <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+    <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center" p={4}>
       <VStack spacing={4} width="100%">
         <Text fontSize="2xl">Top 10 Nomad Destinations</Text>
         {loading && <Spinner size="xl" />}
