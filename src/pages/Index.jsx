@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Container, VStack, Text, Box, Spinner, Alert, AlertIcon, Button, Input, FormControl, FormLabel } from "@chakra-ui/react";
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://jjfebbwwtcxyhvnkuyrh.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZmViYnd3dGN4eWh2bmt1eXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY0NTgyMzMsImV4cCI6MjAzMjAzNDIzM30.46syqx3sHX-PQMribS6Vt0RLLUY7w295JHO61yZ-fec';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://jjfebbwwtcxyhvnkuyrh.supabase.co';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZmViYnd3dGN4eWh2bmt1eXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY0NTgyMzMsImV4cCI6MjAzMjAzNDIzM30.46syqx3sHX-PQMribS6Vt0RLLUY7w295JHO61yZ-fec';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const Index = () => {
