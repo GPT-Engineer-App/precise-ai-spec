@@ -43,7 +43,7 @@ const Index = () => {
     if (error) {
       setError(error.message);
     } else {
-      setCities(cities.map(city => city.id === editingCity.id ? data[0] : city));
+      fetchCities(); // Fetch the updated city data
       setEditingCity(null);
     }
   };
