@@ -1,62 +1,52 @@
-import { useState } from "react";
-import { Container, VStack, Input, Button, Text, Alert, AlertIcon } from "@chakra-ui/react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = "https://jjfebbwwtcxyhvnkuyrh.supabase.co";
-const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZmViYnd3dGN4eWh2bmt1eXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY0NTgyMzMsImV4cCI6MjAzMjAzNDIzM30.46syqx3sHX-PQMribS6Vt0RLLUY7w295JHO61yZ-fec";
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { useState, useEffect } from "react";
+import { Container, VStack, Text, Box, Spinner, Alert, AlertIcon } from "@chakra-ui/react";
 
 const Index = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [isError, setIsError] = useState(false);
+  const [cities, setCities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleRegister = async () => {
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) {
-      setMessage(error.message);
-      setIsError(true);
-    } else {
-      setMessage("Registration successful! Please check your email to confirm your account.");
-      setIsError(false);
-    }
-  };
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await fetch("https://api.example.com/nomad-cities");
+        if (!response.ok) {
+          throw new Error("Failed to fetch cities");
+        }
+        const data = await response.json();
+        setCities(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleLogin = async () => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      setMessage(error.message);
-      setIsError(true);
-    } else {
-      setMessage("Login successful!");
-      setIsError(false);
-    }
-  };
+    fetchCities();
+  }, []);
 
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
       <VStack spacing={4} width="100%">
-        <Text fontSize="2xl">Welcome to Our App</Text>
-        <Input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <Input
-          placeholder="Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button colorScheme="teal" onClick={handleRegister}>Register</Button>
-        <Button colorScheme="blue" onClick={handleLogin}>Login</Button>
-        {message && (
-          <Alert status={isError ? "error" : "success"}>
+        <Text fontSize="2xl">Top 10 Nomad Destinations</Text>
+        {loading && <Spinner size="xl" />}
+        {error && (
+          <Alert status="error">
             <AlertIcon />
-            {message}
+            {error}
           </Alert>
+        )}
+        {!loading && !error && (
+          <VStack spacing={4} width="100%">
+            {cities.map((city, index) => (
+              <Box key={city.id} p={4} borderWidth="1px" borderRadius="lg" width="100%">
+                <Text fontSize="lg" fontWeight="bold">{index + 1}. {city.name}</Text>
+                <Text>Internet Speed: {city.internet_speed} Mbps</Text>
+                <Text>Cost of Living: ${city.cost_of_living} / month</Text>
+                <Text>Weather: {city.weather}</Text>
+              </Box>
+            ))}
+          </VStack>
         )}
       </VStack>
     </Container>
